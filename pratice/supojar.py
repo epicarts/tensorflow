@@ -302,7 +302,7 @@ a = []
 x = np.linspace(-8,8,100)
 y = [(1/(1+np.exp(-i))) for i in x]
 y
-
+import numpy as np
 import matplotlib.pylab as plt
 %matplotlib inline
 plt.plot(x,y)
@@ -319,6 +319,9 @@ plt.show()
 import matplotlib.pyplot as plt
 plt.plot(range(100))
 plt.show()
+import math
+y = [math.tan(i) for i in x]
+
 
 x = np.linspace(0,8,100)
 y = [np.sin(i) for i in x]
@@ -335,8 +338,20 @@ plt.plot(x,y)
 x = np.linspace(-8,8,100)
 y = [max(0,i) for i in x]
 plt.plot(x,y)
+x = np.linspace(-8,8,100)
+y = [max(0.01*i,i) for i in x]
+plt.plot(x,y)
 
-a= np.random.randn(2,2)* 0.01
+
+
+a= np.random.randn(3,2)* 1001#너무 큰값을 가지면 안댐. 활성화 함수에서 경사의 기울기가 매우 낮음
 a
-b = np.zeros((2,1))
+b = np.zeros((3,1))
 b
+
+
+#입력 특징 3
+# 은닉층 5 5 3
+#출력 1
+
+tf
