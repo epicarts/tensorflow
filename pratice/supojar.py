@@ -1,6 +1,5 @@
 import numpy as np
 
-
 num_points = 200
 vectors_set = []
 
@@ -20,41 +19,31 @@ import tensorflow as tf
 1. 랜덤으로 W 값 초기화
 2.
 '''
-
-random_val = tf.random_uniform([1],-1.0,0.0)#텐서의 차원 1, -1.0 ~ 1.0 의 값으로 랜덤하게 초기화
-random_val
+#텐서의 차원 1, -1.0 ~ 1.0 의 값으로 랜덤하게 초기화
+random_val = tf.random_uniform([1],-1.0,0.0)
 W = tf.Variable(random_val)#W의 초기값은 -1 ~ 1사이의 1차원 값으로 랜덤하게 초기화 한다.
-W
-
-
 b = tf.Variable(tf.zeros([1]))#텐서의 1차원 0으로 정의
-b
-
 y_pred = W * x_data + b# 예측 y값 = W * x_data + b
-y_pred
-
 #x를 넣었을때 예측값 - 원래값을 제곱. => 전체 값의 평균을 구함.
 loss = tf.reduce_mean(tf.square(y_pred - y_data)) # (예측값 - 원래값) 제곱
-
-
-optimizer = tf.train.GradientDescentOptimizer(0.0015)# 경사하강법: 학습 속도 learning rate
-
+optimizer = tf.train.GradientDescentOptimizer(0.0015)# 경사하강법: 학습 속도 learning rate\
 #위의 경사 하강법(학습룰 0.0015)을 이용하여 loss(코스트함수)가 최소화 되는 값을 찾아야함.
 train = optimizer.minimize(loss)
-
-
-init = tf.initialize_all_variables()#모든 값 초기화?
-sess = tf.Session() #텐서플로우 세션 만들기.
+init = tf.initialize_all_variables()#모든 값 초기화
+sess = tf.Session() #텐서플로우 세션 만들기
 sess.run(init)#초기값 init 로 세션 시작
 
 
-for step in range(1000):
+for step in range(10):
     sess.run(train)
     print(step, sess.run(W),sess.run(b))
     print(step, sess.run(loss))
 
     plt.plot(x_data,y_data,'ro')
     plt.plot(x_data, sess.run(W)*x_data + sess.run(b))
+
+
+
 wirter = tf.summary.FileWriter('testgraph',sess.graph)
 
 #코스트 함수의 개념  = 예측값과 실제 값 사이의 차이를 계산해주는 함수.
