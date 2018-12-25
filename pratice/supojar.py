@@ -235,6 +235,7 @@ for _ in range(1000):
 
 sess.run(b)
 sess.run(W)
+
 W.get_shape()
 
 #테스트 하는코드
