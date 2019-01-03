@@ -30,11 +30,12 @@ optimizer = tf.train.GradientDescentOptimizer(0.0015)# 경사하강법: 학습 �
 #위의 경사 하강법(학습룰 0.0015)을 이용하여 loss(코스트함수)가 최소화 되는 값을 찾아야함.
 train = optimizer.minimize(loss)
 init = tf.initialize_all_variables()#모든 값 초기화
+
 sess = tf.Session() #텐서플로우 세션 만들기
 sess.run(init)#초기값 init 로 세션 시작
 
 
-for step in range(10):
+for step in range(1000):
     sess.run(train)
     print(step, sess.run(W),sess.run(b))
     print(step, sess.run(loss))
