@@ -21,4 +21,5 @@ ax = fig.add_subplot(111)
 # w1 *x1 + x2W2 - theta = 0
 # 0.5 x1 +
 ax.scatter(0, 0, -(w1 * x1 +b) / w2 + b, c='r', marker='x')#계단 함수 적용전
-ax.plot_surface(X1,-(w1 * X1 +b) / w2, Z, linewidth=0)
+ax.scatter(X1,-(w1 * X1 +b) / w2, linewidth=0)
+plt.show()
