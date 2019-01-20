@@ -125,23 +125,93 @@ vectors = tf.constant(vectors_set)
 k = 4
 
 #중심은 변수(Variable) 생성.
-#random_shuffle 첫번째 텐서의 차원을 기준으로 (vector)의 원소를 섞음.
-centroid = tf.Variable(tf.random_shuffle(vectors), [0,0], [k,-1])
-centroid
-vectors.get_shape()#순서 대로 D0 D1 이렇게 부름.
-centroid.get_shape()#만약 차원이 하나 더 늘어나면 D0 D1 D2 로 바뀜.
+#random_shuffle 첫번째 텐서의 차원을 기준으로 (vector)의 원소를 무작위로 섞음.
+#k개의 중심을 선택.
+centroids = tf.Variable(tf.slice(tf.random_shuffle(vectors), [0,0], [k,-1]))
+
+vectors.get_shape()#순서 대로 D0 D1 이렇게 부름. (2000 X 2)
+centroids.get_shape()#만약 차원이 하나 더 늘어나면 D0 D1 D2 로 바뀜. (4 X 2)
+
+#이제 vectors 와 centroids 사이의 거리를 구해야함. but 둘다 2D 이지만, 계산하기에 맞지가 않음.
+
+
+
 
 #vector 한차원 더 확장 시킴 (1, 2000, 2)
 expanded_vectors = tf.expand_dims(vectors, 0)
 expanded_vectors
 
-#centroid 도 한차원 더 확장시킴 (2000, 1, 2)
-expanded_centroid = tf.expand_dims(centroid, 1)
+#centroid 도 한차원 더 확장시킴 (4, 1, 2)
+expanded_centroid = tf.expand_dims(centroids, 1)
 expanded_centroid
 
+subtract_result = tf.subtract(expanded_vectors, expanded_centroid)
+subtract_result.get_shape()
 
-#argmin: Returns the index with the smallest value across dimensions of a tensor.
-#주어진 expanded_vectors(1, 2000, 2) - expanded_centroid(2000, 1, 2) 뺄셈을 하고
-#제곱 한거를 모두 더하는데(reduce_sum) 차원의 크기를 2로 나누어서 더함
-assignments = tf.argmin(tf.reduce_sum(tf.square(tf.subtract(
-    expanded_vectors, expanded_centroid)), 2), 0)
+#여기까지 유클리드 제곱을 사용하여 거리를 구함.
+sqr = tf.square(subtract_result)
+sqr.get_shape()
+
+#특정 차원을 제거하고 합계를 구함. (x, y)좌표의 값 차원을 없애고 더함
+#즉, (4 X 2000) 배열에 모두 (x + y)를 함
+distances = tf.reduce_sum(sqr, 2)
+distances.get_shape()
+
+#argmin최소값의 인덱스를 얻기 위해서 사용.
+#(4 X 2000) 에서 4가 최소가 되는 값만 남겨두고 다 버림. => 1차원으로 만듬.
+assignments = tf.argmin(distances, 0)
+assignments
+
+
+'''
+중심 mean 구하기
+'''
+#k(4)개의 개수만 큼 for 문을 돔. c = 1, 2, 3, 4 .... k
+#tf.equal(assignments, c) 군집과 매칭되는 텐서의 각원소 위치를 True 로 표시한 bool 텐서
+bool_tensor = tf.equal(assignments, 1)#2,3,4 ... k개
+bool_tensor
+
+#where 함수를 사용하여, 불리언에 Ture로 표시된 위치를 값으로 가지는 텐서(2000 X 1)를 만듬
+where_Ture = tf.where(bool_tensor)
+where_Ture
+
+#reshape로 (2000 x 1) 을 (1 x 2000) 으로 변경
+tf.reshape(where_Ture, [1, -1])
+
+#gather 함수를 사용하여 (1 X 2000)을 k번째 군집에 속한 모든점(x, y)를 가진 텐서를 만듬
+#(1 X 2000 X 2)
+tf.gather()
+
+#reduce_mean을 사용하여 k번째 군집에 속한 모든 점의 평균 값을 가진 텐서 (1 X 2)를 만듬. 2 = (x,y)
+tf.reduce_mean()
+
+
+#리스트를 만들어서 tf.concat([리스트]) 에 넣음. / 리스트를 이어 붙여서(concat) 텐서를 만듬.
+#최종코드
+means = tf.concat([tf.reduce_mean(tf.gather(vectors, tf.reshape(tf.where(tf.equal(assignments, c)), [1, -1])), reduction_indices=[1]) for c in range(k)], 0)
+
+means#(총 군집개수 X x,y)  (4 X 2) 사이즈의 텐서가 나옴.
+
+'''
+이제 중심을 means 텐서의 새 값으로 업데이트 하는 코드를 작성해야함
+'''
+#assigning 할당하다. 중심값과 means 를 update_centroids에 할당함
+update_centroids = tf.assign(centroids, means)
+update_centroids
+
+#variable값을 쓰기전에 항상 초기화
+init_op = tf.global_variables_initializer()
+
+sess = tf.Session()
+
+for step in range(100):
+    #매 반복마다 중심은 업데이트 되고 각 점은 새롭게 군집에 할당됨.
+    #update_centroids(4, 2): centroids, means 을 할당한 텐서 / 연상ㄴ은 리턴이 없음
+    #centroids(4, 2): 내가 임의로 정한 군집
+    #assignments(2000,): assignments 군집들이 최소가 되는 값들만 모아둔 텐서
+    _, centroid_value, assignment_values = sess.run([update_centroids, centroids, assignments])
+    #update_centroids 연산은 리턴 값이 없음.
+
+centroids
+update_centroids
+assignments
