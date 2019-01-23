@@ -8,5 +8,4 @@ import tensorflow as tf
 #그래프 구성 => 세션 생성 => run 실행
 sess = tf.Session()
 
-#
 sess = tf.InteractiveSession()

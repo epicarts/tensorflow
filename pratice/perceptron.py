@@ -9,7 +9,6 @@ b = -theta# 임계값을 -b로 치환함.
 #
 '''
 0 = b + (w1*x1) + (w2*x2)를 변형하면,
-x2 =
 '''
 
 fig = plt.figure()#그림 생성
@@ -19,7 +18,6 @@ ax = fig.add_subplot(111)
 # x 좌표 : X1
 # y 좌표 : X2
 # w1 *x1 + x2W2 - theta = 0
-# 0.5 x1 +
 ax.scatter(0, 0, -(w1 * x1 +b) / w2 + b, c='r', marker='x')#계단 함수 적용전
 ax.scatter(X1,-(w1 * X1 +b) / w2, linewidth=0)
 plt.show()
