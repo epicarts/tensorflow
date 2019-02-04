@@ -29,3 +29,11 @@ y = iris.target
 # Place the iris data into a pandas dataframe
 iris_df = pd.DataFrame(iris.data[:, [2, 3]], columns=iris.feature_names[2:])
 iris_df
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3, random_state=0)
+
+print('There are {} samples in the training set and {} samples in the test set'.format(
+X_train.shape[0], X_test.shape[0]))
+print()
+https://www.kaggle.com/mgabrielkerr/visualizing-knn-svm-and-xgboost-on-iris-dataset
