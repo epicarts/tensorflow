@@ -22,7 +22,7 @@ analysis_data.Species[analysis_data.Species == 2] = 'c'
 analysis_data.head()
 
 g = sns.pairplot(analysis_data, hue="Species", size=2.5)
-
+Callback
 
 training_set = tf.contrib.learn.datasets.base.load_csv_with_header(
     filename=path+IRIS_TRAINING,
