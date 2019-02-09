@@ -44,8 +44,8 @@ hours score 비례할 것이다.
 y = ax + b
 인풋은 시간, 내가 예상하는건  score
 '''
-x_train = exam.hours.values.tolist()
-y_train = exam.score.values.tolist()
+X = tf.placeholder(tf.float32, shape=[None], name='X_train_data')
+Y = tf.placeholder(tf.float32, shape=[None], name='Y_train_data')
 
 #텐서플로우가 사용하는 변수.
 #trainable Variable 라고 생각가능.
@@ -72,11 +72,42 @@ for step in range(100000):
     sess.run(train)
     if step % 20 == 0:
         print(step, sess.run(cost), sess.run(W), sess.run(b))
-    if sess.run(cost) < 3.0:
+    if sess.run(cost) < 8.0:
         break
 writer = tf.summary.FileWriter("./testgraph/")
 writer.add_graph(sess.graph)  # Show the graph
 
+def make_graph(sess_data):
+    '''
+    인풋: 세션 데이터
+    자동으로 그래프 저장 해쥼 경로를 이미 지정되어 잇다.
+    '''
+    try:
+        writer = tf.summary.FileWriter("./testgraph/")
+        writer.add_graph(sess.graph)  # Show the graph
+    except:
+        raise TypeError('not tf.Session type')
 
-plt.plot(x_train,y_train,marker='o',linestyle='', ms=15)
-plt.plot(x_train ,sess.run(pred_y))
+
+#또다른 변형 식
+X = tf.placeholder(tf.float32, shape=[None], name='X_train_data')
+Y = tf.placeholder(tf.float32, shape=[None], name='Y_train_data')
+#feed_dict={X: x_train, Y: y_train}
+bais = tf.Variable(tf.random_uniform([1]), tf.float32, name='bais')
+Weight = tf.Variable(tf.random_normal([1]), tf.float32, name='Weight')
+
+Y_hat = X*Weight + bais
+
+
+loss_cost = tf.reduce_mean((tf.square(Y_hat - Y)))
+optimizer = tf.train.GradientDescentOptimizer(0.003)
+train = optimizer.minimize(loss_cost)
+
+sess2 = tf.Session()
+sess2.run(tf.global_variables_initializer())
+
+for step in range(2001):
+    cost_val, W_val, b_val, _ = sess2.run([loss_cost, Weight, bais, train],
+                                       feed_dict={X: exam.hours, Y: exam.score})
+    if step % 20 == 0:
+        print(step, cost_val, W_val, b_val)
