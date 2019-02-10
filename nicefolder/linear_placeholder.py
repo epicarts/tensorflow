@@ -43,9 +43,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
-plt.figure(figsize=[16, 16])
-ax1 = plt.subplot(221)
-ax2 = plt.subplot(222)
+
 
 
 '''
@@ -56,50 +54,14 @@ ax2 = plt.subplot(222)
 4. weight값이 고정되어있을때, 혹은 bais 값이 고정되어있을때 cost를 생각해보라.
 5. 위 식을 토대로 텐서플로우를 활용해서 그려보자.
 '''
-#1. 3d 그래프를 그리기 위한 셋팅
-ax3 = plt.subplot(223, projection='3d')
-ax3.set_xlabel('Weight')
-ax3.set_xlim([-10, 10])
-
-ax3.set_ylabel('Bais')
-ax3.set_ylim([-10, 10])
-
-ax3.set_zlabel('Cost')
-ax3.set_zlim([0, 100])
-
-#cost 함수 그래프 그리기
-ax3_X = np.arange(-10.0, 10.0, 0.1)
-ax3_Y = np.arange(-10.0, 10.0, 0.1)
-ax3_XX, ax3_YY = np.meshgrid(ax3_X, ax3_Y)
-
-#cost 함수 만들기
-ax3_weight = tf.constant(ax3_XX, tf.float32)
-ax3_bais = tf.constant(ax3_YY, tf.float32)
-
-ax3_x_data = tf.placeholder(tf.float32)
-ax3_y_data = tf.placeholder(tf.float32)
-
-
-ax3_cost = tf.square(ax3_x_dat - )
-
-ax3_h = 1 * ax3_XX + ax3_YY
-asd = ax3_h - 1.1
-np.square(asd)
-ax3.plot_surface(ax3_XX, ax3_YY, np.square(asd), linewidth=0)
 
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
 
-fig, ax1 = plt.subplots(figsize=(8, 5),
-                        subplot_kw={'projection': '3d'})
-
-
-
-ax1.plot_wireframe(ax3_XX,ax3_YY,l)
-ax1.set_title("plot")
-
-plt.show()
+plt.figure(figsize=[16, 16])
+ax1 = plt.subplot(221)
+ax2 = plt.subplot(222)
 
 
 #그래프를 만들었으니 실행을 해야된다. sess 하나를 만들어 준다.
@@ -119,9 +81,6 @@ with tf.Session() as sess:
             ax2.plot(W_val, cost_val, marker='x', markersize=12)#line을 그려보자
             ax2.set_xlabel('Weight value')
             ax2.set_ylabel('cost value')
-
-            #Weight, Bais, Cost
-            ax3.scatter(W_val, 1, cost_val, c='r', marker='o', markersize='5')
 
             print("cost: ",cost_val, " bais: ",b_val," weight: ",W_val)
     #학습이 끝나면 저장
