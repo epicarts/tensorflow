@@ -13,7 +13,9 @@ from pandas import DataFrame, Series
 4. weight값이 고정되어있을때, 혹은 bais 값이 고정되어있을때 cost를 생각해보라.
 5. 위 식을 토대로 텐서플로우를 활용해서 그려보자.
 '''
+#17*x^2-16*abs(x)*y+17*y^2=225
 #z = func_z(x, y)#z = x**2/5. + x*y/50. + y**2/5.
+
 
 w_range = np.arange(-2.0, 4.0, 0.05)
 b_range = np.arange(-2.0, 4.0, 0.05)
@@ -187,7 +189,7 @@ def cost_graph_3d(w, b, x, y, figsize=(8, 5)):
 
     with tf.Session() as sess:
         z = sess.run(cost)
-    
+
     #여기서 부터 그래프 그리기
     fig, ax = plt.subplots(figsize=figsize, subplot_kw={'projection': '3d'})
 
@@ -208,9 +210,10 @@ def cost_graph_3d(w, b, x, y, figsize=(8, 5)):
     print("minimum cost:", z.min())
     plt.show()
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.contour(w, b, z, cmap='jet')
-
+    fig, ax2 = plt.subplots(figsize=(10, 6))
+    ax2.contour(w, b, z, cmap='jet',norm=LogNorm())
+a = LogNorm()
+a
 from matplotlib.colors import LogNorm
 
 cost_graph_3d(w, b, x, y)
