@@ -25,3 +25,10 @@ x.initializer.run()
 sub = tf.subtract(x, a)
 print(sub.eval())
 sess.close()
+
+list1=list(map(int,input('입력하세요').strip().split()))
+list1
+print(list1.sort())
+list1.sort()
+list1
+sorted(list1)

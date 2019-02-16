@@ -159,3 +159,6 @@ with tf.Session() as sess:
     y_pred_after = sess.run(y_pred,{x:data_x})
     plot_graph(y_pred_after,'after.png')
     summary_writer.close()
+
+import tensorflow as tf
+tf.test.is_gpu_available()

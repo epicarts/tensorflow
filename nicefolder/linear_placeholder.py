@@ -34,7 +34,7 @@ cost = tf.reduce_mean(tf.square(hypothesis - Y_place))
 
 
 #조절은 어떻게 할 것인가 ? 경사하강법. 학습률은 ?
-optimizer = tf.train.GradientDescentOptimizer(0.01, name='GD')
+ mizer = tf.train.GradientDescentOptimizer(0.01, name='GD')
 
 #학습은 무엇으로 할것인가?경사하강법. 코스트가 어떻게 되는 값을 학습이 된다고 할까? 최소
 train = optimizer.minimize(cost)
