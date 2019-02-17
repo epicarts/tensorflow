@@ -160,5 +160,5 @@ with tf.Session() as sess:
     plot_graph(y_pred_after,'after.png')
     summary_writer.close()
 
-import tensorflow as tf
-tf.test.is_gpu_available()
+for i in range(10,1,-1):
+    print(i)
