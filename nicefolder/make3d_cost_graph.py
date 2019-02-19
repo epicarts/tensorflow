@@ -17,9 +17,10 @@ from pandas import DataFrame, Series
 #z = func_z(x, y)#z = x**2/5. + x*y/50. + y**2/5.
 
 
-w_range = np.arange(-2.0, 4.0, 0.05)
-b_range = np.arange(-2.0, 4.0, 0.05)
+w_range = np.arange(-4.0, 4.0, 0.05)
+b_range = np.arange(-4.0, 4.0, 0.05)
 w, b = np.meshgrid(w_range, b_range)
+
 x = [1., 2., 3., 4., 5.]
 y = [2.1, 3.1, 4.1, 5.1, 6.1]
 w.shape
@@ -30,6 +31,7 @@ epoch = 10
 w = 3
 b = 3
 learning_rate=0.05
+figsize=(8, 5)
 def cost_graph_3d_gradient(w, b, x, y, epoch = 5, learning_rate=0.05, figsize=(8, 5)):
     '''
     3차원 공간에서 gradients를 사용하여 최저점을 찾아간다.
@@ -184,12 +186,13 @@ def cost_graph_3d(w, b, x, y, figsize=(8, 5)):
     hypothesis
 
     #cost 함수  3차원 값 합치기((예측값 - 실제값)^2 /5)
-    cost = tf.reduce_mean(tf.square(hypothesis - y_data), axis=2)
+    cost = tf.sqrt(tf.reduce_mean(tf.square(hypothesis - y_data), axis=2))
     cost
 
     with tf.Session() as sess:
         z = sess.run(cost)
-
+    z.shape
+    z
     #여기서 부터 그래프 그리기
     fig, ax = plt.subplots(figsize=figsize, subplot_kw={'projection': '3d'})
 
@@ -209,11 +212,86 @@ def cost_graph_3d(w, b, x, y, figsize=(8, 5)):
     ax.plot_surface(w, b, z, cmap='jet',rstride=1, cstride=1, linewidth=0)
     print("minimum cost:", z.min())
     plt.show()
-
+    '''
     fig, ax2 = plt.subplots(figsize=(10, 6))
     ax2.contour(w, b, z, cmap='jet',norm=LogNorm())
+    '''
 a = LogNorm()
 a
 from matplotlib.colors import LogNorm
+
+cost_graph_3d(w, b, x, y)
+
+
+
+import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+import tensorflow as tf
+import pandas as pd
+from pandas import DataFrame, Series
+
+
+w_range = np.arange(-4.0, 4.0, 0.05)
+b_range = np.arange(-4.0, 4.0, 0.05)
+w, b = np.meshgrid(w_range, b_range)
+
+x = [1., 2., 3., 4., 5.]
+y = [2.1, 3.1, 4.1, 5.1, 6.1]
+cost_graph_3d(w, b, x, y)
+
+def cost_graph_3d(w, b, x, y, figsize=(8, 5)):
+    '''
+    w: weight 범위 np.meshgrid() 결과 값.
+    b: bais 범위   np.meshgrid() 결과 값.
+    x: input data [1., 2., 3., 4., 5.]
+    y: label data [1., 2., 3., 4., 5.]
+    데이터 X, 예측값 Y, cost 함수(tensor type)
+    '''
+
+    #Weight와 bais 3차원으로 변환, (x, y, 1)
+    weight = tf.constant(w, shape=(w.shape[0], w.shape[1],1),dtype=tf.float32)
+    weight
+    bais = tf.constant(b, shape=(w.shape[0], w.shape[1],1),dtype=tf.float32)
+    bais
+
+    #차원 변경 (1, 1, data size)
+    x_data = tf.constant(x,shape=(1, 1, len(x)),dtype=tf.float32)
+    x_data
+    y_data = tf.constant(y,shape=(1, 1, len(y)),dtype=tf.float32)
+    y_data
+
+    ##z = x**2/5. + x*y/50. + y**2/5.
+    #가설 만들기 y = ax + b
+    hypothesis = weight * x_data + bais
+    hypothesis
+
+    #cost 함수  3차원 값 합치기((예측값 - 실제값)^2 /5)
+    cost = tf.sqrt(tf.reduce_mean(tf.square(hypothesis - y_data), axis=2))
+    cost
+
+    with tf.Session() as sess:
+        z = sess.run(cost)
+    z.shape
+    z
+    #여기서 부터 그래프 그리기
+    fig, ax = plt.subplots(figsize=figsize, subplot_kw={'projection': '3d'})
+
+    #x축 설정
+    ax.set_xlabel('Weight')
+    ax.set_xlim([w.min(), w.max()])
+
+    #y축 설정
+    ax.set_ylabel('Bais')
+    ax.set_ylim([b.min(), b.max()])
+
+    #z축 설정
+    ax.set_zlabel('Cost')
+    ax.set_zlim([z.min(), z.max()])
+
+    ax.invert_xaxis()
+    ax.plot_surface(w, b, z, cmap='jet',rstride=1, cstride=1, linewidth=0)
+    print("minimum cost:", z.min())
+    plt.show()
 
 cost_graph_3d(w, b, x, y)
