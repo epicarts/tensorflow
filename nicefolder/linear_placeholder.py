@@ -21,7 +21,7 @@ Y_place = tf.placeholder(tf.float32, shape=[None])
 #tensorflow 에서 변하는 변수 정의
 variable_random = tf.random_normal([1])
 W = tf.Variable(variable_random, tf.float32, name='Weight')
-b = tf.Variable(variable_random, tf.float32, name='bais')
+b = tf.Variable(variable_random, tf.float32, name='bais') 
 
 #가설을 세워보자 y = ax + b 선형으로
 hypothesis = X_place * W + b
